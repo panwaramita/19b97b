@@ -70,9 +70,10 @@ export const logout = (id) => async (dispatch) => {
 // CONVERSATIONS THUNK CREATORS
 
 export const fetchConversations = () => async (dispatch) => {
+
   try {
     const { data } = await axios.get("/api/conversations");
-    dispatch(gotConversations(data));
+   await dispatch(gotConversations(data));
   } catch (error) {
     console.error(error);
   }
@@ -83,8 +84,8 @@ const saveMessage = async (body) => {
   return data;
 };
 
-const sendMessage = (data, body) => {
-  socket.emit("new-message", {
+const sendMessage =async (data, body) => {
+ await socket.emit("new-message", {
     message: data.message,
     recipientId: body.recipientId,
     sender: data.sender,
@@ -93,17 +94,17 @@ const sendMessage = (data, body) => {
 
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
-export const postMessage = (body) => (dispatch) => {
+//changes
+export const postMessage = (body) => async(dispatch) => {
   try {
-    const data = saveMessage(body);
-
-    if (!body.conversationId) {
-      dispatch(addConversation(body.recipientId, data.message));
+    const data = await saveMessage(body);
+    if (!body.conversationId) { 
+   await   dispatch(addConversation(body.recipientId, data.message));
     } else {
-      dispatch(setNewMessage(data.message));
+    await  dispatch(setNewMessage(data.message));
     }
-
     sendMessage(data, body);
+   
   } catch (error) {
     console.error(error);
   }
