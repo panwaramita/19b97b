@@ -42,6 +42,7 @@ router.post("/register", async (req, res, next) => {
 router.post("/login", async (req, res, next) => {
   try {
     // expects username and password in req.body
+    console.log("hi",req.body);
     const { username, password } = req.body;
     if (!username || !password)
       return res.status(400).json({ error: "Username and password required" });
@@ -51,7 +52,8 @@ router.post("/login", async (req, res, next) => {
         username: req.body.username,
       },
     });
-
+    console.log("Sess Sec",process.env.SESSION_SECRET)
+    console.log("data found");
     if (!user) {
       console.log({ error: `No user found for username: ${username}` });
       res.status(401).json({ error: "Wrong username and/or password" });
