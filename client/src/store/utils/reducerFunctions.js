@@ -63,9 +63,10 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   return state.map((convo) => {
     if (convo.otherUser.id === recipientId) {
       //created the newConvo using spread operator to store the new message
-      const newConvo={...convo}
-      newConvo.messages.splice(0,0,message);
-      return newConvo;
+      let newConvo={...convo}
+      newConvo.latestMessageText = message.text;
+     newConvo.messages.splice(newConvo.messages.length,0,message);
+     return newConvo;
     } else {
       return convo;
     }
