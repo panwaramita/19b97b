@@ -52,8 +52,6 @@ router.post("/login", async (req, res, next) => {
         username: req.body.username,
       },
     });
-    console.log("Sess Sec",process.env.SESSION_SECRET)
-    console.log("data found");
     if (!user) {
       console.log({ error: `No user found for username: ${username}` });
       res.status(401).json({ error: "Wrong username and/or password" });

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { FormControl, FilledInput } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -33,9 +32,8 @@ const Input = (props) => {
     const reqBody = {
       text: event.target.text.value,
       recipientId: otherUser.id,
-      conversationId:conversationId?conversationId:null,
-      sender: user,
-       readStatus:false
+      conversationId,
+      sender: conversationId ? null : user
     };
     await postMessage(reqBody);
     setText("");
@@ -56,18 +54,13 @@ const Input = (props) => {
     </form>
   );
 };
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-    conversations: state.conversations
-  };
-};
+
 const mapDispatchToProps = (dispatch) => {
   return {
     postMessage: (message) => {
       dispatch(postMessage(message));
-    }
+    },
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Input);
+export default connect(null, mapDispatchToProps)(Input);
