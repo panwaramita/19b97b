@@ -4,20 +4,11 @@ export const addMessageToStore = (state, payload) => {
  
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
-      
-    console.log(convo);
       //created the newConvo using spread operator to store the new message
        let newConvo={...convo}
-      // newConvo.messages.push(message);
-      // newConvo.latestMessageText = message.text;
-      // return newConvo;
-      newConvo.messages.splice(0,0,message);
+       newConvo.latestMessageText = message.text;
+      newConvo.messages.splice(newConvo.messages.length,0,message);
       return newConvo;
-    //   return[
-    //     ...state.slice(0, state.length),
-    // message,
-    // ...state.slice(state.length)
-    //   ]
     } else {
       return convo;
     }
