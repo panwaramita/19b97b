@@ -70,6 +70,7 @@ export const logout = (id) => async (dispatch) => {
 // CONVERSATIONS THUNK CREATORS
 
 export const fetchConversations = () => async (dispatch) => {
+
   try {
     const { data } = await axios.get("/api/conversations");
     dispatch(gotConversations(data));
@@ -93,16 +94,15 @@ const sendMessage = (data, body) => {
 
 // message format to send: {recipientId, text, conversationId}
 // conversationId will be set to null if its a brand new conversation
-export const postMessage = (body) => (dispatch) => {
+//changes
+export const postMessage = (body) => async (dispatch) => {
   try {
-    const data = saveMessage(body);
-
+    const data = await saveMessage(body);
     if (!body.conversationId) {
       dispatch(addConversation(body.recipientId, data.message));
     } else {
       dispatch(setNewMessage(data.message));
     }
-
     sendMessage(data, body);
   } catch (error) {
     console.error(error);
