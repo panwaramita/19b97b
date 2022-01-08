@@ -51,20 +51,21 @@ router.put("/", async (req, res, next) => {
     }
     const senderId = req.user.id;
     const { conversationId } = req.body;
-
-    let messages = await Message.update(
-      { isRead: true },
-      {
-        where: {
-          senderId: {
-            [Op.not]: senderId,
+    if (conversationId) {
+      const messages = await Message.update(
+        { isRead: true },
+        {
+          where: {
+            senderId: {
+              [Op.not]: senderId,
+            },
+            conversationId: conversationId,
+            isRead: false,
           },
-          conversationId: conversationId,
-          isRead: false,
-        },
-      }
-    );
-    return res.json({ messages });
+        }
+      );
+      return res.json(204);
+    }
   } catch (error) {
     next(error);
   }

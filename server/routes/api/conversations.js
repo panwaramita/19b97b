@@ -69,8 +69,8 @@ router.get("/", async (req, res, next) => {
       } else {
         convoJSON.otherUser.online = false;
       }
-      convoJSON.readCount = convoJSON.messages.filter(function (message) {
-        return message.senderId !== userId && message.isRead === false;
+      convoJSON.readCount = convoJSON.messages.filter((message) => {
+        message.senderId !== userId && message.isRead === false;
       }).length;
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[convoJSON.messages.length - 1].text;

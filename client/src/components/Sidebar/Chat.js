@@ -21,20 +21,19 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation, postReadStatus } = props;
+  const { conversation, postReadStatus, activeConversations } = props;
   const { otherUser } = conversation;
   const { latestMessageText, messages } = conversation;
   const lastMessage = messages[messages.length - 1];
-  const activeConversation = props.activeConversation;
 
   useEffect(() => {
     if (
       lastMessage &&
       lastMessage.senderId === otherUser.id &&
-      activeConversation === otherUser.username &&
+      activeConversations === otherUser.username &&
       lastMessage.isRead === false
     ) {
-     postReadStatus(props.conversation.id);
+      postReadStatus(props.conversation.id);
     }
   }, [latestMessageText])
 

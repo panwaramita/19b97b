@@ -115,10 +115,11 @@ export const postReadStatus = (body) => async (dispatch) => {
     const reqBody = {
       conversationId: body,
     };
-    await saveMessageReadStatus(reqBody);
     if (reqBody.conversationId) {
-      dispatch(setReadCount(reqBody.conversationId));
+      await saveMessageReadStatus(reqBody);
+      await dispatch(setReadCount(reqBody.conversationId));
     }
+    sendReadStatus(reqBody);
   }
   catch (error) {
     console.error(error);
@@ -127,6 +128,11 @@ export const postReadStatus = (body) => async (dispatch) => {
 const saveMessageReadStatus = async (body) => {
   const { data } = await axios.put("/api/messages", body);
   return data;
+};
+const sendReadStatus = (data) => {
+  socket.emit("read", {
+    conversationId: data.conversationId
+  });
 };
 export const searchUsers = (searchTerm) => async (dispatch) => {
   try {

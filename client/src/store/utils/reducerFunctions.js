@@ -1,11 +1,12 @@
 export const addMessageToStore = (state, payload) => {
-  const { message, sender } = payload;
+  const { message} = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
       const newConvo = { ...convo }
       newConvo.latestMessageText = message.text;
       newConvo.messages.splice(newConvo.messages.length, 0, message);
+      newConvo.sendMessagetoReceiver=1;
       return newConvo;
     } else {
       return convo;
@@ -75,7 +76,7 @@ export const addMessageToStoreReadCount = (state, message, sender, currentActive
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
       const convoCopy = { ...convo };
-      convoCopy.messages.push(message);
+      convoCopy.messages.splice(convoCopy.messages.length, 0, message);
       convoCopy.latestMessageText = message.text;
       if (sender !== currentActiveConversation) {
         convoCopy.readCount++;
@@ -92,6 +93,24 @@ export const resetReadCount = (state, conversationId) => {
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
       convoCopy.readCount = 0;
+      convoCopy.messages.forEach(element => {
+        element.isRead=true;
+      });
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
+export const resetReadStatus = (state, conversationId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      convoCopy.messages.forEach(element => {
+        element.isRead=true;
+      });
+      convoCopy.readCount = 0;
+      convoCopy.sendMessagetoReceiver=0;
       return convoCopy;
     } else {
       return convo;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography ,Badge} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,17 +18,18 @@ const useStyles = makeStyles((theme) => ({
     color: "#9CADC8",
     letterSpacing: -0.17,
   },
-  readStatus: {
-    color: "white",
+  previewTextUnread: {
     fontSize: 12,
-    display: "flex",
-    justifyContent: "center",
-    backgroundImage: "linear-gradient(225deg, #6CC1FF 0%, #3A8DFF 100%)",
-    borderRadius: 10,
-    height: 20,
-    width: 20,
-    marginRight: 10,
-    alignItems: "center"
+    // color: "#9CADC8",
+    letterSpacing: -0.17,
+    fontWeight:"bold"
+  },
+  readStatus: {
+    fontSize: 12,
+     display: "flex",
+     justifyContent: "center",
+     marginRight: 15,
+     alignItems: "center"
   },
 }));
 
@@ -43,15 +44,26 @@ const ChatContent = (props) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
-          {latestMessageText}
-        </Typography>
+        {
+          conversation.readCount > 0 &&(
+            <Typography className={classes.previewTextUnread}>
+            {latestMessageText}
+          </Typography>
+          
+        )}
+        {
+          conversation.readCount === 0 &&(
+            <Typography className={classes.previewText}>
+            {latestMessageText}
+          </Typography>
+          
+        )}
       </Box>
       {
         (readCount) > 0 && (
-          <Typography className={classes.readStatus}>
-            {readCount}
-          </Typography>
+          <Badge badgeContent={readCount} color="primary" className={classes.readStatus}>
+</Badge>
+
         )}
     </Box>
   );
