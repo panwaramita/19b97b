@@ -15,6 +15,15 @@ const Message = db.define("message", {
     allowNull: false,
     default: false
   },
+  chatId: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
+  isGroupChat:{
+    type:Sequelize.BOOLEAN,
+    allowNull:true,
+    default:false
+  }
 });
 
 module.exports = Message;

@@ -117,4 +117,17 @@ export const resetReadStatus = (state, conversationId) => {
     }
   });
 };
+export const getConversationFromDB = (conversation) => {
+  return conversation.map((convo) => {
+      const convoCopy = { ...convo };
+      convoCopy.messages.forEach(element => {
+        if(element.isRead===false && convo.otherUser.id===element.senderId)
+        {
+          convoCopy.readCount +=1;
+        }
+      })
+      return convoCopy;
+      
+    });
+};
 
