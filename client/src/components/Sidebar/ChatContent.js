@@ -28,8 +28,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
      display: "flex",
      justifyContent: "center",
-     marginRight: 15,
-     alignItems: "center"
+     marginRight: 20,
+     alignItems: "center",
+     marginTop:18
   },
 }));
 
@@ -45,14 +46,12 @@ const ChatContent = (props) => {
           {otherUser.username}
         </Typography>
         {
-          conversation.readCount > 0 &&(
+          conversation.readCount > 0 ?(
             <Typography className={classes.previewTextUnread}>
             {latestMessageText}
           </Typography>
           
-        )}
-        {
-          conversation.readCount === 0 &&(
+        ):(
             <Typography className={classes.previewText}>
             {latestMessageText}
           </Typography>
