@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
 import { connect } from "react-redux";
-
+import { postReadStatus } from "../../store/utils/thunkCreators";
 const useStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 8,
@@ -21,11 +21,25 @@ const useStyles = makeStyles((theme) => ({
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation } = props;
+  const { conversation, postReadStatus, activeConversations } = props;
   const { otherUser } = conversation;
+  const { latestMessageText, messages } = conversation;
+  const lastMessage = messages[messages.length - 1];
+
+  useEffect(() => {
+    if (
+      lastMessage &&
+      lastMessage.senderId === otherUser.id &&
+      activeConversations === otherUser.username &&
+      lastMessage.isRead === false
+    ) {
+      postReadStatus(props.conversation.id);
+    }
+  }, [latestMessageText,activeConversations,lastMessage,otherUser.id,otherUser.username,postReadStatus,props.conversation.id])
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);
+    postReadStatus(conversation.id);
   };
 
   return (
@@ -45,6 +59,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
+    },
+    postReadStatus: (id) => {
+      dispatch(postReadStatus(id));
     }
   };
 };

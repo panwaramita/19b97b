@@ -1,9 +1,10 @@
 import io from "socket.io-client";
 import store from "./store";
 import {
-  setNewMessage,
   removeOfflineUser,
   addOnlineUser,
+  setNewMessageReadCount,
+  checkReadStatus
 } from "./store/conversations";
 
 const socket = io(window.location.origin);
@@ -19,8 +20,20 @@ socket.on("connect", () => {
     store.dispatch(removeOfflineUser(id));
   });
   socket.on("new-message", (data) => {
-    store.dispatch(setNewMessage(data.message, data.sender));
+    // store.dispatch(setNewMessage(data.message, data.sender));
+    const fullStore = store.getState();
+    const currentActiveConversation = fullStore.activeConversation;
+    store.dispatch(
+      setNewMessageReadCount(
+        data.message,
+        data.sender.username,
+        currentActiveConversation
+      )
+    );
   });
+  socket.on('read', (data) => {
+    store.dispatch(checkReadStatus(data.conversationId));
+  })
 });
 
 export default socket;

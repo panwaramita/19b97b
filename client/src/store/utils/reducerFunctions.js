@@ -1,11 +1,12 @@
 export const addMessageToStore = (state, payload) => {
-  const { message, sender } = payload;
+  const { message} = payload;
   // if sender isn't null, that means the message needs to be put in a brand new convo
   return state.map((convo) => {
     if (convo.id === message.conversationId) {
       const newConvo = { ...convo }
       newConvo.latestMessageText = message.text;
       newConvo.messages.splice(newConvo.messages.length, 0, message);
+      newConvo.sendMessagetoReceiver=1;
       return newConvo;
     } else {
       return convo;
@@ -61,6 +62,7 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   return state.map((convo) => {
     if (convo.otherUser.id === recipientId) {
       const newConvo = { ...convo }
+      newConvo.id = message.conversationId;
       newConvo.latestMessageText = message.text;
       newConvo.messages.splice(newConvo.messages.length, 0, message);
       return newConvo;
@@ -68,4 +70,64 @@ export const addNewConvoToStore = (state, recipientId, message) => {
       return convo;
     }
   });
+};
+
+export const addMessageToStoreReadCount = (state, message, sender, currentActiveConversation) => {
+  return state.map((convo) => {
+    if (convo.id === message.conversationId) {
+      const convoCopy = { ...convo };
+      convoCopy.messages.splice(convoCopy.messages.length, 0, message);
+      convoCopy.latestMessageText = message.text;
+      if (sender !== currentActiveConversation) {
+        convoCopy.readCount++;
+      };
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
+
+export const resetReadCount = (state, conversationId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      convoCopy.readCount = 0;
+      convoCopy.messages.forEach(element => {
+        element.isRead=true;
+      });
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
+export const resetReadStatus = (state, conversationId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      convoCopy.messages.forEach(element => {
+        element.isRead=true;
+      });
+      convoCopy.readCount = 0;
+      convoCopy.sendMessagetoReceiver=0;
+      return convoCopy;
+    } else {
+      return convo;
+    }
+  });
+};
+
+export const fetchConvoFromDb = (conversation) => {
+  return conversation.map((convo) => {    
+    const convoCopy = { ...convo };
+    convoCopy.messages.forEach((message)=>{
+      if(message.senderId===convoCopy.otherUser.id && message.isRead===false)
+      {
+        convoCopy.readCount++;
+      }
+    })
+    
+    return convoCopy;
+  })
 };
