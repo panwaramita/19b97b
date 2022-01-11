@@ -131,3 +131,16 @@ export const getConversationFromDB = (conversation) => {
     });
 };
 
+export const fetchConvoFromDb = (conversation) => {
+  return conversation.map((convo) => {    
+    const convoCopy = { ...convo };
+    convoCopy.messages.forEach((message)=>{
+      if(message.senderId===convoCopy.otherUser.id && message.isRead===false)
+      {
+        convoCopy.readCount++;
+      }
+    })
+    
+    return convoCopy;
+  })
+};

@@ -35,7 +35,7 @@ const Chat = (props) => {
     ) {
       postReadStatus(props.conversation.id);
     }
-  }, [latestMessageText])
+  }, [latestMessageText,activeConversations,lastMessage,otherUser.id,otherUser.username,postReadStatus,props.conversation.id])
 
   const handleClick = async (conversation) => {
     await props.setActiveChat(conversation.otherUser.username);

@@ -7,7 +7,7 @@ import {
   addMessageToStoreReadCount,
   resetReadCount,
   resetReadStatus,
-  getConversationFromDB
+  fetchConvoFromDb
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -102,7 +102,7 @@ export const setNewMessageReadCount = (
 const reducer = (state = [], action) => {
   switch (action.type) {
     case GET_CONVERSATIONS:
-      return getConversationFromDB(action.conversations);
+      return fetchConvoFromDb(action.conversations);
     case SET_MESSAGE:
       return addMessageToStore(state, action.payload);
     case ADD_ONLINE_USER: {
